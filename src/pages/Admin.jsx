@@ -1,108 +1,76 @@
 import React, { useEffect, useState } from "react";
-import {
-  getBookings,
-  approveBooking,
-  rejectBooking,
-  getHalls,
-  getDocumentsForBooking
-} from "../services/api"; // Ensure correct import
+import { getBookings, approveBooking, rejectBooking, createHall } from "../services/api";
+import Spinner from "../components/Spinner";
 
 export default function Admin() {
   const [bookings, setBookings] = useState([]);
-  const [halls, setHalls] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [hallForm, setHallForm] = useState({ name:"", address:"", capacity:0, fee:0 });
 
-  useEffect(() => {
-    fetchAllBookings();
-
-    // Load all halls for mapping hallId → hallName
-    getHalls().then((res) => {
-      const hallMap = {};
-      res.data.forEach((h) => (hallMap[h.id] = h));
-      setHalls(hallMap);
-    });
-  }, []);
-
-  const fetchAllBookings = () => {
-    getBookings()
-      .then((res) => setBookings(res.data))
-      .catch((err) => console.error("Failed to load bookings", err));
+  const load = () => {
+    setLoading(true);
+    getBookings().then(res => setBookings(res.data)).catch(()=>{}).finally(()=>setLoading(false));
   };
 
-  const handleApprove = async (id) => {
-    try {
-      await approveBooking(id);
-      fetchAllBookings();
-    } catch (error) {
-      alert("Failed to approve booking");
-    }
+  useEffect(()=>{ load(); }, []);
+
+  const doApprove = async (id) => {
+    await approveBooking(id);
+    load();
   };
 
-  const handleReject = async (id) => {
-    try {
-      await rejectBooking(id);
-      fetchAllBookings();
-    } catch (error) {
-      alert("Failed to reject booking");
-    }
+  const doReject = async (id) => {
+    await rejectBooking(id);
+    load();
   };
 
-  const viewDocs = async (bookingId) => {
+  const create = async (e) => {
+    e.preventDefault();
     try {
-      const res = await getDocumentsForBooking(bookingId);
-      if (res.data.length === 0) {
-        alert("No documents uploaded for this booking.");
-      } else {
-        alert(JSON.stringify(res.data, null, 2)); // Display documents in alert or handle as needed
-      }
+      await createHall(hallForm);
+      alert("Hall created");
+      setHallForm({ name:"", address:"", capacity:0, fee:0 });
     } catch (err) {
-      alert("Error fetching documents");
+      alert("Failed");
     }
   };
 
   return (
     <div>
-      <h2>Admin — Manage Bookings</h2>
+      <h1>Admin Dashboard</h1>
 
-      {bookings.length === 0 && <p>No bookings yet</p>}
-
-      {bookings.map((b) => (
-        <div className="card" key={b.id} style={{ marginBottom: 12 }}>
-          <div>
-            <strong>{b.name}</strong> — {b.date} | {b.timeSlot}
-          </div>
-
-          <div>
-            Hall: {halls[b.hallId]?.name || b.hallId} | Status:{" "}
-            <strong>{b.status}</strong>
-          </div>
-
-          <button
-            className="btn"
-            onClick={() => viewDocs(b.id)}
-            style={{ marginTop: 8 }}
-          >
-            View Documents
-          </button>
-
-          <div style={{ marginTop: 8 }}>
-            {b.status === "PENDING" && (
-              <>
-                <button
-                  className="btn"
-                  onClick={() => handleApprove(b.id)}
-                  style={{ marginRight: 8 }}
-                >
-                  Approve
-                </button>
-
-                <button className="btn" onClick={() => handleReject(b.id)}>
-                  Reject
-                </button>
-              </>
-            )}
-          </div>
+      <section className="admin-grid">
+        <div>
+          <h3>Create Hall</h3>
+          <form className="card" onSubmit={create}>
+            <input placeholder="Name" value={hallForm.name} onChange={e=>setHallForm({...hallForm, name:e.target.value})} required />
+            <input placeholder="Address" value={hallForm.address} onChange={e=>setHallForm({...hallForm, address:e.target.value})} required />
+            <input type="number" placeholder="Capacity" value={hallForm.capacity} onChange={e=>setHallForm({...hallForm, capacity:+e.target.value})} required />
+            <input type="number" placeholder="Fee" value={hallForm.fee} onChange={e=>setHallForm({...hallForm, fee:+e.target.value})} required />
+            <button className="btn">Create</button>
+          </form>
         </div>
-      ))}
+
+        <div>
+          <h3>Bookings</h3>
+          {loading ? <Spinner /> : (
+            <div>
+              {bookings.map(b => (
+                <div key={b.id} className="admin-booking-row card">
+                  <div>
+                    <strong>{b.name}</strong> • {b.date} • {b.timeSlot}
+                    <div className="muted">Status: {b.status}</div>
+                  </div>
+                  <div className="admin-actions">
+                    <button className="btn-sm" onClick={()=>doApprove(b.id)}>Approve</button>
+                    <button className="btn-outline" onClick={()=>doReject(b.id)}>Reject</button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
     </div>
   );
 }

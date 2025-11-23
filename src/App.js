@@ -1,48 +1,37 @@
-import React, { useContext } from "react";
-import { Outlet, Link } from "react-router-dom";
-import { AuthContext } from "./context/AuthContext";
+import React from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Navbar from "./components/Navbar";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import Admin from "./pages/Admin";
+import BookingForm from "./pages/BookingForm";
+import PaymentPage from "./pages/PaymentPage";
+import HallDetails from "./pages/HallDetails";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 export default function App() {
-  const { token, role, logout } = useContext(AuthContext);
-
   return (
-    <div>
-      <header className="header">
-        <div className="container">
-          <h1>Community Hall Booking</h1>
-
-          <nav>
-            <Link to="/">Home</Link>
-
-            {" | "}
-
-            {/* Show Admin menu only if role=ADMIN */}
-            {role === "ADMIN" && <Link to="/admin">Admin</Link>}
-
-            {" | "}
-
-            {/* If logged in → show Logout ; else Login */}
-            {!token ? (
-              <Link to="/login">Login</Link>
-            ) : (
-              <button
-                onClick={logout}
-                style={{ marginLeft: "10px", cursor: "pointer" }}
-              >
-                Logout
-              </button>
-            )}
-          </nav>
-        </div>
-      </header>
-
-      <main className="container">
-        <Outlet />
-      </main>
-
-      <footer className="footer">
-        <div className="container">© CHB - Demo</div>
-      </footer>
-    </div>
+    <BrowserRouter>
+      <div className="app">
+        <Navbar />
+        <main className="container">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/hall/:id" element={<HallDetails />} />
+            <Route path="/book/:hallId" element={<BookingForm />} />
+            <Route path="/payment" element={<PaymentPage />} />
+            <Route
+              path="/admin"
+              element={
+                <ProtectedRoute role="ROLE_ADMIN">
+                  <Admin />
+                </ProtectedRoute>
+              }
+            />
+          </Routes>
+        </main>
+      </div>
+    </BrowserRouter>
   );
 }

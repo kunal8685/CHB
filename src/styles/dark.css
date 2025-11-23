@@ -1,0 +1,82 @@
+:root{
+  --bg:#0f1720;
+  --panel:#0b1220;
+  --muted:#9aa6b2;
+  --accent:#00d1b2;
+  --accent-2:#6be7d3;
+  --card:#0e1a24;
+  --text:#e6f0f3;
+  --danger:#ff6b6b;
+  --glass: rgba(255,255,255,0.03);
+  --rounded:12px;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+
+*{box-sizing:border-box}
+html,body,#root{height:100%}
+body{
+  margin:0;
+  background:linear-gradient(180deg,var(--bg),#071018 120%);
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+
+/* Layout */
+.app { min-height:100vh; display:flex; flex-direction:column; }
+.container { width:100%; max-width:1100px; margin:28px auto; padding:0 18px; }
+
+/* Navbar */
+.nav { display:flex; justify-content:space-between; align-items:center; padding:18px 24px; background:linear-gradient(90deg, rgba(255,255,255,0.02), transparent); border-radius:12px; margin:16px; box-shadow:0 6px 18px rgba(0,0,0,0.5);}
+.brand { color:var(--accent); font-weight:700; font-size:20px; text-decoration:none; margin-right:12px; }
+.nav-right a, .nav-right button { color:var(--text); text-decoration:none; margin-left:12px; }
+.btn { background:linear-gradient(90deg,var(--accent),var(--accent-2)); color:#002; padding:10px 14px; border-radius:10px; border:none; cursor:pointer; font-weight:600; }
+.btn-ghost { background:transparent; border:1px solid rgba(255,255,255,0.04); padding:8px 10px; border-radius:8px; color:var(--muted); cursor:pointer; }
+.btn-sm { background:var(--accent); color:#001; padding:6px 8px; border-radius:8px; border:none; cursor:pointer; font-weight:600; }
+.btn-outline { background:transparent; border:1px solid rgba(255,255,255,0.06); padding:8px 10px; border-radius:8px; color:var(--text); cursor:pointer; }
+
+/* Cards */
+.card { background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent); border-radius:var(--rounded); padding:16px; box-shadow: 0 6px 16px rgba(0,0,0,0.6); margin:12px 0; }
+
+/* Grids */
+.grid { display:grid; grid-template-columns: repeat(auto-fill,minmax(300px,1fr)); gap:16px; align-items:start; }
+
+/* Hall Card */
+.hall-card { display:flex; gap:12px; overflow:hidden; align-items:stretch; }
+.hall-image { width:160px; height:120px; background-size:cover; background-position:center; border-radius:10px; flex-shrink:0; }
+.hall-body { padding:6px 8px; }
+.hall-meta { display:flex; gap:12px; color:var(--muted); margin-top:8px; }
+.card-actions { margin-top:12px; display:flex; gap:8px; }
+
+/* Forms */
+.form-row, label { display:block; margin:8px 0 6px; color:var(--muted); font-size:13px; }
+input, select, textarea {
+  width:100%; padding:10px 12px; border-radius:8px; border:1px solid rgba(255,255,255,0.03);
+  background:transparent; color:var(--text); outline:none;
+}
+input:focus, select:focus, textarea:focus { box-shadow:0 0 0 4px rgba(0,209,178,0.06); border-color:rgba(0,209,178,0.2); }
+
+/* Hero / details */
+.detail-hero { display:flex; gap:18px; align-items:center; margin-bottom:18px; }
+.detail-hero img { width:380px; max-width:40%; border-radius:12px; object-fit:cover; }
+
+/* Admin list */
+.admin-grid { display:grid; grid-template-columns: 370px 1fr; gap:18px; align-items:start; }
+.admin-booking-row { display:flex; justify-content:space-between; align-items:center; padding:12px; }
+
+/* Spinner */
+.spinner { width:36px; height:36px; border-radius:50%; border:4px solid rgba(255,255,255,0.06); border-top-color:var(--accent); animation:spin 1s linear infinite; margin:20px auto; }
+@keyframes spin{ to { transform:rotate(360deg); } }
+
+/* small */
+.muted{ color:var(--muted); }
+.page-title{ font-size:28px; margin-bottom:12px; font-weight:700; color:var(--text); }
+.booking-row{ padding:10px 8px; border-bottom:1px dashed rgba(255,255,255,0.02); display:flex; justify-content:space-between; }
+
+/* responsive */
+@media (max-width:800px){
+  .detail-hero{ flex-direction:column; }
+  .detail-hero img{ width:100%; max-width:100%; }
+  .admin-grid { grid-template-columns: 1fr; }
+  .nav { flex-direction:column; gap:12px; }
+}
