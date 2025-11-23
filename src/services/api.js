@@ -44,7 +44,7 @@ export const getFilesForBooking = (bookingId) =>
 // Admin actions
 export const approveBooking = (id) => API.put(`/admin/bookings/${id}/approve`);
 export const rejectBooking = (id) => API.put(`/admin/bookings/${id}/reject`);
-export const checkBooking = (id) => API.put(`/api/admin/bookings/${id}/check`);
+export const checkBooking = (id) => API.put(`/admin/bookings/${id}/check`);
 
 // Payment simulate
 export const payBooking = (bookingId, paymentRef) =>

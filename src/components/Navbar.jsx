@@ -8,7 +8,7 @@ export default function Navbar() {
   return (
     <nav className="nav">
       <div className="nav-left">
-        <Link to="/" className="brand">PlayHub</Link>
+        <Link to="/" className="brand">CHB</Link>
       </div>
 
       <div className="nav-right">
