@@ -1,31 +1,39 @@
-import React, { useState } from "react";
-import { payBooking } from "../services/api";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { payBooking } from "../services/api"; // Import the correct API function
 
 export default function PaymentPage() {
-  const [bookingId, setBookingId] = useState("");
-  const [message, setMessage] = useState("");
+  const [bookingId, setBookingId] = useState(null);
+  const [paymentRef, setPaymentRef] = useState("");
+  const navigate = useNavigate();
 
-  const doPay = async () => {
-    if (!bookingId) return alert("Enter booking ID");
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    setBookingId(urlParams.get("bookingId"));
+  }, []);
+
+  const handlePayment = async () => {
     try {
-      const resp = await payBooking(bookingId, "SIM_" + Date.now());
-      setMessage("Payment simulated. Receipt downloaded.");
-      // the backend returns attachment; browser will receive it when calling via link,
-      // but here we don't auto-download binary. We just show message.
+      const res = await payBooking(bookingId, paymentRef); // Replace makePayment with payBooking
+      alert("Payment successful!");
+      navigate(`/confirmation?bookingId=${bookingId}`);
     } catch (err) {
-      setMessage("Payment failed");
+      console.error("Payment failed", err);
+      alert("Payment failed");
     }
   };
 
   return (
-    <div style={{ maxWidth: 600 }}>
-      <h2>Simulate Payment</h2>
-      <div className="card">
-        <label>Booking ID</label>
-        <input value={bookingId} onChange={(e)=>setBookingId(e.target.value)} placeholder="e.g. 101" />
-        <button className="btn" onClick={doPay}>Pay Now (simulate)</button>
-        {message && <div className="muted" style={{ marginTop: 12 }}>{message}</div>}
-      </div>
+    <div className="payment-container">
+      <h1>Payment</h1>
+      <input
+        type="text"
+        value={paymentRef}
+        onChange={(e) => setPaymentRef(e.target.value)}
+        placeholder="Enter payment reference"
+        required
+      />
+      <button onClick={handlePayment}>Make Payment</button>
     </div>
   );
 }

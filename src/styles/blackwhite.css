@@ -1,0 +1,18 @@
+/* src/styles/blackwhite.css */
+:root {
+  --bg-color: #0f0f0f;
+  --surface-color: #1a1a1a;
+  --text-primary: #ffffff;
+  --text-secondary: #aaaaaa;
+  --accent-color: #ffffff;
+  --muted-color: #555555;
+  --rounded: 12px;
+  font-family: Inter, Roboto, Arial, sans-serif;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-primary);
+  margin: 0;
+  padding: 0;
+}

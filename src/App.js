@@ -7,6 +7,7 @@ import Admin from "./pages/Admin";
 import BookingForm from "./pages/BookingForm";
 import PaymentPage from "./pages/PaymentPage";
 import HallDetails from "./pages/HallDetails";
+import Register from "./pages/Register"; // Import the Register component
 import ProtectedRoute from "./components/ProtectedRoute";
 
 export default function App() {
@@ -21,6 +22,7 @@ export default function App() {
             <Route path="/hall/:id" element={<HallDetails />} />
             <Route path="/book/:hallId" element={<BookingForm />} />
             <Route path="/payment" element={<PaymentPage />} />
+            <Route path="/register" element={<Register />} /> {/* Add Register Route */}
             <Route
               path="/admin"
               element={
